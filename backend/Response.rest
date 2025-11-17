@@ -1,8 +1,20 @@
-POST http://localhost:5000/api/auth/register
+@authToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdjMzNhOGZjLTczYTktNDE0OS04ZmRkLTUwZjVlMjRkMjAxNCIsImlhdCI6MTc2MzM4OTM2NywiZXhwIjoxNzYzOTk0MTY3fQ.NCtlNbh5u3ssT6VZi0RRKUQSRkgKaClevzl-xaEmYGU
+@id =7c33a8fc-73a9-4149-8fdd-50f5e24d2014
+
+
+post http://localhost:5000/api/auth/profile?id={{}}
+Authorization: Bearer {{@authToken}}
 Content-Type: application/json
 
 {
     "email": "kelvin@test.com",
-    "password": "securePa$$sword123",
-    "name": "kelvin"
+    "password": "securePa$$sword123"
 }
+
+
+
+# @authToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdjMzNhOGZjLTczYTktNDE0OS04ZmRkLTUwZjVlMjRkMjAxNCIsImlhdCI6MTc2MzM4OTQ3MCwiZXhwIjoxNzYzOTk0MjcwfQ.g0HpA_6mxq31jOdWqHKxclPqjrSiOG14eCuGyuoRX5o
+# @id =7c33a8fc-73a9-4149-8fdd-50f5e24d2014
+# get http://localhost:5000/api/auth/profile?id={{id}}
+# Authorization: Bearer {{authToken}}
+# Content-Type: application/json
