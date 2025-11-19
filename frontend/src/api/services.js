@@ -19,6 +19,16 @@ export const authAPI = {
     }
     return response.data;
   },
+
+  forgotPassword: async (payload) => {
+    const response = await apiClient.post('/auth/forgot-password', payload);
+    return response.data;
+  },
+  
+  resetPassword: async (payload) => {
+    const response = await apiClient.post('/auth/reset-password', payload);
+    return response.data;
+  },
   
   logout: () => {
     localStorage.removeItem('token');

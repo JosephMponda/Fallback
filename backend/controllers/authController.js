@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs';
 import prisma from '../config/database.js';
 import { generateToken } from '../utils/tokenUtils.js';
 import logger from '../config/logger.js';
+import jwt from 'jsonwebtoken';
+import { sendEmail } from '../config/email.js';
 
 export const register = async (req, res) => {
   try {
@@ -171,5 +173,83 @@ export const updateProfile = async (req, res) => {
       success: false,
       message: 'Error updating profile',
     });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    // Always respond the same to avoid leaking which emails exist
+    const genericMessage = 'If an account exists we sent reset instructions to your email.';
+
+    if (!user) {
+      return res.status(200).json({ success: true, message: genericMessage });
+    }
+
+    // Create a short-lived token for password reset
+    const token = jwt.sign({ id: user.id, type: 'password_reset' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
+
+    const subject = 'Reset your Everest account password';
+    const html = `
+      <p>Hi ${user.name || ''},</p>
+      <p>We received a request to reset your password. Click the link below to set a new password. This link expires in 1 hour.</p>
+      <p><a href="${resetUrl}">Reset your password</a></p>
+      <p>If you didn't request this, you can ignore this email.</p>
+    `;
+
+    try {
+      await sendEmail({ to: user.email, subject, html, text: `Reset your password: ${resetUrl}` });
+      logger.info(`Password reset email sent to ${user.email}`);
+      return res.status(200).json({ success: true, message: genericMessage });
+    } catch (emailErr) {
+      logger.error('Failed to send password reset email:', emailErr);
+      // Fail silently to client but log details on server
+      return res.status(500).json({ success: false, message: 'Error sending reset email' });
+    }
+  } catch (error) {
+    logger.error('Forgot password error:', error);
+    res.status(500).json({ success: false, message: 'Error processing request' });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({ success: false, message: 'Invalid request' });
+    }
+
+    let payload;
+    try {
+      payload = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired token' });
+    }
+
+    if (payload.type !== 'password_reset' || !payload.id) {
+      return res.status(400).json({ success: false, message: 'Invalid token' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: payload.id } });
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Invalid token' });
+    }
+
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await prisma.user.update({ where: { id: user.id }, data: { password: hashedPassword } });
+
+    return res.status(200).json({ success: true, message: 'Password has been reset successfully' });
+  } catch (error) {
+    logger.error('Reset password error:', error);
+    res.status(500).json({ success: false, message: 'Error resetting password' });
   }
 };

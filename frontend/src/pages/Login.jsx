@@ -78,6 +78,11 @@ const Login = () => {
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary-600 focus:outline-none disabled:bg-gray-100"
                   placeholder="Enter your password"
                 />
+                <div className="mt-2 text-right">
+                  <Link to={`/forgot-password?next=${encodeURIComponent(next)}`} className="text-sm text-primary-600 hover:underline">
+                    Forgot password?
+                  </Link>
+                </div>
               </div>
 
               <button

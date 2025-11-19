@@ -35,19 +35,21 @@ const Payment = () => {
         <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
           <div className="mb-6">
             <h2 className="text-xl font-semibold">Quote Summary</h2>
-            <p className="text-sm text-gray-600">Name: {quote?.customerName || quote?.name || '—'}</p>
-            <p className="text-sm text-gray-600">Email: {quote?.customerEmail || quote?.email || '—'}</p>
-            <p className="text-sm text-gray-600">Service: {quote?.serviceType || '—'}</p>
+            <p className="text-sm text-gray-600">Name: {quote?.customerName || quote?.name /*|| '—'*/}</p>
+            <p className="text-sm text-gray-600">Email: {quote?.customerEmail || quote?.email /*|| '—'*/}</p>
+            <p className="text-sm text-gray-600">Service: {quote?.serviceType /*|| '—'*/}</p>
             <p className="text-sm text-gray-600">Amount (currency): {quote?.budget ? `${quote?.budget} ${quote?.currency || ''}` : 'Contact for amount'}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-4 border rounded-lg flex flex-col items-start">
               <div className="mb-3">
-                <img src={AirtelLogo} alt="Airtel Money" width={48} className="w-12 h-auto object-contain" />
+                <img src={AirtelLogo} alt="Airtel Money" width={48} height={48} className="w-12 h-12 object-contain" />
               </div>
               <h3 className="font-semibold">Airtel Money</h3>
+              <p className="text-sm text-gray-600">Account No:</p>
               <p className="text-sm text-gray-600">+265 999 411 680</p>
+              <p className="text-sm  text-gray-600">Name: Gerald Mponda</p>
               <div className="mt-3 flex gap-2">
                 <button
                   type="button"
@@ -63,9 +65,10 @@ const Payment = () => {
 
             <div className="p-4 border rounded-lg flex flex-col items-start">
               <div className="mb-3">
-                <img src={TnmLogo} alt="TNM Mpamba" width={48} className="w-12 h-auto object-contain" />
+                <img src={TnmLogo} alt="TNM Mpamba" width={48} height={48} className="w-12 h-12 object-contain" />
               </div>
               <h3 className="font-semibold">TNM Mpamba</h3>
+              <p className="text-sm text-gray-600">Account No:</p>
               <p className="text-sm text-gray-600">+265 888 891 819</p>
               <p className="text-sm  text-gray-600">Name: Gerald Mponda</p>
               <div className="mt-3 flex gap-2">
@@ -83,9 +86,10 @@ const Payment = () => {
 
             <div className="p-4 border rounded-lg flex flex-col items-start">
               <div className="mb-3">
-                <img src={NationalBankLogo} alt="National Bank" width={48} className="w-12 h-auto object-contain" />
+                <img src={NationalBankLogo} alt="National Bank" width={48} height={48} className="w-12 h-12 object-contain" />
               </div>
-              <h3 className="font-semibold">Bank Transfer (National Bank)</h3>
+              <h3 className="font-semibold">Bank Transfer</h3>
+              <h3 className="font-semibold">(National Bank)</h3>
               <p className="text-sm text-gray-600">Account No: 1001688703</p>
               <p className="text-sm text-gray-600">Name: Everest Printing</p>
               <div className="mt-3 flex gap-2">
@@ -104,7 +108,7 @@ const Payment = () => {
 
           <div className="mt-6 flex justify-between items-center">
             <button onClick={handleBack} className="btn-ghost">Back</button>
-            <a className="btn-primary" href="mailto:info@example.com?subject=Payment%20Confirmation">Email Us Payment Details</a>
+            <a className="btn-primary" href="mailto:grandgaze01@gmail.com?subject=Payment%20Confirmation">Email Us Payment Details</a>
           </div>
         </div>
       </section>

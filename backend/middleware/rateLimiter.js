@@ -36,7 +36,7 @@ export const paymentLimiter = rateLimit({
 // Rate limiter for email/contact endpoints
 export const emailLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5,
+  max: 8,
   message: {
     success: false,
     message: 'Too many email requests, please try again later.',
