@@ -47,7 +47,7 @@ export const createContactMessage = async (req, res) => {
         ${subject ? `<p><strong>Subject:</strong> ${subject}</p>` : ''}
         <p>${message}</p>
         <p>Our team typically responds within 24 hours.</p>
-        <p>Best regards,<br>Your Team</p>
+        <p>Best regards,<br>Everest Team</p>
       `,
       text: `Thank you for contacting us! We have received your message and will respond soon.`,
     });

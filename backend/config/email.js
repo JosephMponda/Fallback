@@ -1,13 +1,20 @@
 import nodemailer from 'nodemailer';
 import logger from './logger.js';
 
+const port = process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT, 10) : undefined;
+const preferSecure = (process.env.EMAIL_SECURE === 'true') || port === 465;
+
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: parseInt(process.env.EMAIL_PORT),
-  secure: false, // true for 465, false for other ports
+  port,
+  secure: preferSecure,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
+  },
+  // allow overriding TLS rejection in development if needed
+  tls: {
+    rejectUnauthorized: process.env.EMAIL_TLS_REJECT_UNAUTHORIZED !== 'false',
   },
 });
 
@@ -54,8 +61,9 @@ export const sendEmail = async ({ to, subject, html, text }) => {
     logger.info(`Email sent: ${info.messageId}` + (bcc ? ` (bcc: ${process.env.ADMIN_EMAIL})` : ''));
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    logger.error('Error sending email:', error);
-    throw error;
+    logger.error('Error sending email:', error && error.message ? error.message : error);
+    // don't re-throw here — let callers decide how to handle failure
+    return { success: false, error: error && error.message ? error.message : String(error) };
   }
 };
 

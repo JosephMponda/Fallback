@@ -42,8 +42,8 @@ export const createQuote = async (req, res) => {
       ? new Intl.NumberFormat('en-US', { style: 'currency', currency: currencyCode }).format(parsedBudget)
       : null;
 
-    // Send email to admin
-    await sendAdminNotification({
+    // Send email to admin (don't block creating the quote if email fails)
+    const adminResult = await sendAdminNotification({
       subject: `New Quote Request - ${serviceType}`,
       html: `
         <h2>New Quote Request</h2>
@@ -60,8 +60,8 @@ export const createQuote = async (req, res) => {
       text: `New quote request from ${customerName} (${customerEmail}) for ${serviceType}. Quote ID: ${quote.id}`,
     });
 
-    // Send confirmation to customer
-    await sendEmail({
+    // Send confirmation to customer (also non-fatal)
+    const userResult = await sendEmail({
       to: customerEmail,
       subject: 'Quote Request Received',
       html: `
@@ -78,10 +78,21 @@ export const createQuote = async (req, res) => {
       text: `Thank you for your quote request! Quote ID: ${quote.id}. We will contact you soon.`,
     });
 
+    if (!adminResult?.success) {
+      logger.error('Admin notification failed for quote ' + quote.id + ': ' + (adminResult?.error || 'unknown'));
+    }
+    if (!userResult?.success) {
+      logger.error('Customer confirmation email failed for quote ' + quote.id + ': ' + (userResult?.error || 'unknown'));
+    }
+
     res.status(201).json({
       success: true,
       message: 'Quote request submitted successfully',
       data: { quote },
+      email: {
+        admin: adminResult?.success ? 'sent' : `failed: ${adminResult?.error || 'unknown'}`,
+        customer: userResult?.success ? 'sent' : `failed: ${userResult?.error || 'unknown'}`,
+      }
     });
   } catch (error) {
     logger.error('Create quote error:', error);

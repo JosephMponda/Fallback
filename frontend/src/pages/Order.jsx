@@ -140,7 +140,10 @@ const Order = () => {
       const res = await quotesAPI.create(payload)
 
       // navigate to payment page and pass the created quote (or payload) for payment
-      const quoteData = res?.quote || res || payload
+      // Note: backend quote may not store `currency`, so prefer the returned
+      // quote object but fall back to the payload and ensure currency is set.
+      const quoteData = (res && typeof res === 'object') ? res : payload
+      if (!quoteData.currency) quoteData.currency = payload.currency
       // clear any pending quote now that it was created
       sessionStorage.removeItem('pendingQuote')
       sessionStorage.removeItem('pendingQuoteMeta')
@@ -217,7 +220,8 @@ const Order = () => {
               currency: meta.currencyCode || currencyCode,
             }
             const res = await quotesAPI.create(payload)
-            const quoteData = res?.quote || res || payload
+            const quoteData = (res && typeof res === 'object') ? res : payload
+            if (!quoteData.currency) quoteData.currency = payload.currency
             sessionStorage.removeItem('pendingQuote')
             sessionStorage.removeItem('pendingQuoteMeta')
             // navigate to payment page

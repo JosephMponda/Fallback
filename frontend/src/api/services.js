@@ -96,7 +96,9 @@ export const ordersAPI = {
 export const quotesAPI = {
   create: async (quoteData) => {
     const response = await apiClient.post('/quotes', quoteData);
-    return response.data;
+    // Backend returns { success: true, data: { quote } }
+    // Return the created quote object directly so callers get the quote shape
+    return response.data?.data?.quote;
   },
   
   getAll: async () => {

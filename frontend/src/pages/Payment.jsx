@@ -20,6 +20,27 @@ const Payment = () => {
   const navigate = useNavigate()
   const quote = state?.quote || {}
 
+  const formatAmount = (amount, currency) => {
+    if (amount === undefined || amount === null || amount === '') return null
+    const num = Number(amount)
+    if (Number.isNaN(num)) return null
+
+    try {
+      const locale = (state?.meta?.locale) || navigator.language || 'en-US'
+      const currencyCode = (currency || 'USD').toUpperCase()
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currencyCode,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(num)
+    } catch (e) {
+      return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + (currency || '')
+    }
+  }
+
+  const formattedAmount = formatAmount(quote?.budget, quote?.currency)
+
   const handleBack = () => navigate(-1)
 
   return (
@@ -38,7 +59,7 @@ const Payment = () => {
             <p className="text-sm text-gray-600">Name: {quote?.customerName || quote?.name /*|| '—'*/}</p>
             <p className="text-sm text-gray-600">Email: {quote?.customerEmail || quote?.email /*|| '—'*/}</p>
             <p className="text-sm text-gray-600">Service: {quote?.serviceType /*|| '—'*/}</p>
-            <p className="text-sm text-gray-600">Amount (currency): {quote?.budget ? `${quote?.budget} ${quote?.currency || ''}` : 'Contact for amount'}</p>
+            <p className="text-sm text-gray-600">Amount: {formattedAmount || 'Contact for amount'}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
