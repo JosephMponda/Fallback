@@ -29,7 +29,7 @@ transporter.verify((error, success) => {
 
 export const sendEmail = async ({ to, subject, html, text }) => {
   try {
-    const from = `"Everest Printin Press" <${process.env.EMAIL_USER}>`;
+    const from = `"Everest Printing Press" <${process.env.EMAIL_USER}>`;
 
     // Build BCC list from ADMIN_EMAIL if configured and not already in recipients
     let bcc;

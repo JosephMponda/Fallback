@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { servicesAPI, quotesAPI } from '../api/services'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
@@ -24,6 +24,9 @@ const Order = () => {
   const [loadingServices, setLoadingServices] = useState(true)
   const { isAuthenticated } = useAuth()
   const navigate = useNavigate()
+  const successRef = useRef(null)
+  const [pendingNavigateQuote, setPendingNavigateQuote] = useState(null)
+  const navigateFallbackRef = useRef(null)
 
   useEffect(() => {
     loadServices()
@@ -144,12 +147,21 @@ const Order = () => {
       // quote object but fall back to the payload and ensure currency is set.
       const quoteData = (res && typeof res === 'object') ? res : payload
       if (!quoteData.currency) quoteData.currency = payload.currency
+
       // clear any pending quote now that it was created
       sessionStorage.removeItem('pendingQuote')
       sessionStorage.removeItem('pendingQuoteMeta')
 
-      // navigate to payment page
-      navigate('/payment', { state: { quote: quoteData } })
+      // show the inline success message and schedule navigation when visible
+      setLastSubmittedEmail(quoteData.customerEmail || payload.customerEmail || '')
+      setSubmitted(true)
+      // scroll the success message into view after render
+      setTimeout(() => {
+        successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 300)
+
+      // set the quote we want to navigate with; an effect will observe visibility
+      setPendingNavigateQuote(quoteData)
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit request. Please try again.')
     } finally {
@@ -224,8 +236,14 @@ const Order = () => {
             if (!quoteData.currency) quoteData.currency = payload.currency
             sessionStorage.removeItem('pendingQuote')
             sessionStorage.removeItem('pendingQuoteMeta')
-            // navigate to payment page
-            navigate('/payment', { state: { quote: quoteData } })
+
+            // show the inline success confirmation and schedule navigation when visible
+            setLastSubmittedEmail(quoteData.customerEmail || payload.customerEmail || '')
+            setSubmitted(true)
+            setTimeout(() => {
+              successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }, 300)
+            setPendingNavigateQuote(quoteData)
           } catch (e) {
             console.error('Auto-submit pending quote failed', e)
           }
