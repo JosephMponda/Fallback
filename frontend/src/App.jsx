@@ -9,6 +9,7 @@ import Home from './pages/Home'
 import Services from './pages/Services'
 import Gallery from './pages/Gallery'
 import Order from './pages/Order'
+import Payment from './pages/Payment'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Login from './pages/Login'
@@ -28,6 +29,7 @@ function App() {
               <Route path="/services" element={<Services />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/order" element={<Order />} />
+              <Route path="/payment" element={<Payment />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />

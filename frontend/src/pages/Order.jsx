@@ -42,11 +42,52 @@ const Order = () => {
 
   // detect currency from browser locale (fallback to USD)
   const detectCurrency = () => {
-    const userLocale = navigator.language || 'en-US'
-    setLocale(userLocale)
-    const region = (userLocale.split('-')[1] || 'US').toUpperCase()
+    // Try to robustly detect user's locale/region. Prefer Intl resolved locale,
+    // then navigator.languages, then fallback to navigator.language. If still
+    // unknown, try timezone heuristics (useful when browser locale is generic)
+    const resolvedLocale = (Intl.NumberFormat && Intl.NumberFormat().resolvedOptions && Intl.NumberFormat().resolvedOptions().locale) ||
+      (Intl.DateTimeFormat && Intl.DateTimeFormat().resolvedOptions && Intl.DateTimeFormat().resolvedOptions().locale) ||
+      (navigator.languages && navigator.languages[0]) ||
+      navigator.language ||
+      'en-US'
+
+    setLocale(resolvedLocale)
+
+    // extract region code from locales like en-MW or en-GB
+    let region = null
+    const tryExtractRegion = (loc) => {
+      if (!loc) return null
+      const m = loc.match(/-([A-Za-z]{2,3})$/)
+      return m ? m[1].toUpperCase() : null
+    }
+
+    region = tryExtractRegion(resolvedLocale)
+    if (!region && navigator.languages) {
+      for (const l of navigator.languages) {
+        region = tryExtractRegion(l)
+        if (region) break
+      }
+    }
+
+    // Map some well-known timezones to country codes (helpful if locale lacks region)
+    if (!region) {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+        const tzMap = {
+          'Africa/Blantyre': 'MW',
+          'Africa/Harare': 'ZW',
+          'Africa/Johannesburg': 'ZA',
+          'Europe/London': 'GB',
+        }
+        if (tzMap[tz]) region = tzMap[tz]
+      } catch (e) {
+        // ignore
+      }
+    }
+
     const map = {
       MW: 'MWK', // Malawi
+      ZW: 'ZWL',
       US: 'USD',
       GB: 'GBP',
       KE: 'KES',
@@ -57,6 +98,8 @@ const Order = () => {
       EU: 'EUR',
       AU: 'AUD',
     }
+
+    // default: if we detected nothing, prefer MWK when timezone/locale hints at Africa/Blantyre
     setCurrencyCode(map[region] || 'USD')
   }
 
@@ -87,34 +130,23 @@ const Order = () => {
       }
 
       // build payload: ensure budget is numeric (or undefined)
+      const cleanBudget = formData.budget ? Number(formData.budget.toString().replace(/[^0-9.-]+/g, '')) : undefined
       const payload = {
         ...formData,
-        budget: formData.budget ? Number(formData.budget) : undefined,
+        budget: typeof cleanBudget === 'number' && !Number.isNaN(cleanBudget) ? cleanBudget : undefined,
         currency: currencyCode,
       }
 
-      await quotesAPI.create(payload)
+      const res = await quotesAPI.create(payload)
 
-      setLastSubmittedEmail(formData.customerEmail)
-      setSubmitted(true)
-      // clear form
-      setFormData({
-        customerName: '',
-        customerEmail: '',
-        customerPhone: '',
-        serviceType: '',
-        description: '',
-        budget: ''
-      })
-      // remove any pending quote
+      // navigate to payment page and pass the created quote (or payload) for payment
+      const quoteData = res?.quote || res || payload
+      // clear any pending quote now that it was created
       sessionStorage.removeItem('pendingQuote')
       sessionStorage.removeItem('pendingQuoteMeta')
 
-      // scroll to top so user sees the confirmation
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-
-      // clear message after some time
-      setTimeout(() => setSubmitted(false), 10000)
+      // navigate to payment page
+      navigate('/payment', { state: { quote: quoteData } })
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit request. Please try again.')
     } finally {
@@ -123,7 +155,44 @@ const Order = () => {
   }
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+
+    // allow changing currency selection via same handler
+    if (name === 'currency') {
+      setCurrencyCode(value)
+      return
+    }
+
+    // special-case budget: format with locale-aware thousands separators while typing
+    if (name === 'budget') {
+      // allow digits and decimal point; strip all other characters
+      const cleaned = value.replace(/[^0-9.]/g, '')
+
+      // if empty or just a dot, set raw value
+      if (cleaned === '' || cleaned === '.') {
+        setFormData({ ...formData, budget: cleaned })
+        return
+      }
+
+      // parse to number then format with Intl.NumberFormat using detected locale
+      const num = Number(cleaned)
+      if (Number.isNaN(num)) {
+        setFormData({ ...formData, budget: '' })
+        return
+      }
+
+      try {
+        const formatted = new Intl.NumberFormat(locale || undefined).format(num)
+        setFormData({ ...formData, budget: formatted })
+      } catch (err) {
+        // fallback simple comma formatting
+        const fallback = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        setFormData({ ...formData, budget: fallback })
+      }
+      return
+    }
+
+    setFormData({ ...formData, [name]: value })
   }
 
   // If user just logged in and there is a pending quote, auto-submit it
@@ -141,18 +210,18 @@ const Order = () => {
         // submit after a tick so states are applied
         setTimeout(async () => {
           try {
+            const cleanPendingBudget = data.budget ? Number(data.budget.toString().replace(/[^0-9.-]+/g, '')) : undefined
             const payload = {
               ...data,
-              budget: data.budget ? Number(data.budget) : undefined,
+              budget: typeof cleanPendingBudget === 'number' && !Number.isNaN(cleanPendingBudget) ? cleanPendingBudget : undefined,
               currency: meta.currencyCode || currencyCode,
             }
-            await quotesAPI.create(payload)
-            setLastSubmittedEmail(data.customerEmail)
-            setSubmitted(true)
+            const res = await quotesAPI.create(payload)
+            const quoteData = res?.quote || res || payload
             sessionStorage.removeItem('pendingQuote')
             sessionStorage.removeItem('pendingQuoteMeta')
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-            setTimeout(() => setSubmitted(false), 10000)
+            // navigate to payment page
+            navigate('/payment', { state: { quote: quoteData } })
           } catch (e) {
             console.error('Auto-submit pending quote failed', e)
           }
@@ -268,9 +337,32 @@ const Order = () => {
                 </div>
 
                 <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Currency *</label>
+                  <select
+                    name="currency"
+                    value={currencyCode}
+                    onChange={handleChange}
+                    disabled={loading}
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary-600 focus:outline-none disabled:bg-gray-100"
+                  >
+                    <option value="MWK">MWK - Malawian Kwacha</option>
+                    <option value="ZWL">ZWL - Zimbabwe Dollar</option>
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="KES">KES - Kenyan Shilling</option>
+                    <option value="ZAR">ZAR - South African Rand</option>
+                    <option value="NGN">NGN - Nigerian Naira</option>
+                    <option value="TZS">TZS - Tanzanian Shilling</option>
+                    <option value="ZMW">ZMW - Zambian Kwacha</option>
+                    <option value="AUD">AUD - Australian Dollar</option>
+                  </select>
+                </div>
+
+                <div>
                   <label className="block text-gray-700 font-semibold mb-2">Budget (Optional)</label>
                   <input
-                    type="number"
+                    type="text"
                     name="budget"
                     value={formData.budget}
                     onChange={handleChange}
@@ -322,23 +414,7 @@ const Order = () => {
                 </ul>
               </div>
 
-              <div className="mt-8 bg-gray-50 border-2 border-gray-200 rounded-lg p-6">
-                <h3 className="font-bold text-lg text-gray-900 mb-3">Payment Methods</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <p className="font-semibold text-gray-900">Airtel Money</p>
-                    <p className="text-gray-600">+265 999 411 680</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">TNM Mpamba</p>
-                    <p className="text-gray-600">+265 888 891 819</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Bank Transfer</p>
-                    <p className="text-gray-600">Standard Bank</p>
-                  </div>
-                </div>
-              </div>
+              {/* Payment methods moved to a separate Payment page */}
 
               <button
                 type="submit"
