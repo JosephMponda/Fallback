@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { servicesAPI, quotesAPI } from '../api/services'
+import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const Order = () => {
   const [services, setServices] = useState([])
@@ -12,14 +14,51 @@ const Order = () => {
     budget: ''
   })
 
+  const [currencyCode, setCurrencyCode] = useState('USD')
+  const [locale, setLocale] = useState('en-US')
+  const [lastSubmittedEmail, setLastSubmittedEmail] = useState('')
+
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [loadingServices, setLoadingServices] = useState(true)
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadServices()
+    detectCurrency()
+    // If user returned from login and there's a pending quote, try auto-submit
+    const pending = sessionStorage.getItem('pendingQuote')
+    if (pending) {
+      try {
+        const data = JSON.parse(pending)
+        setFormData((f) => ({ ...f, ...data }))
+      } catch (e) {
+        // ignore
+      }
+    }
   }, [])
+
+  // detect currency from browser locale (fallback to USD)
+  const detectCurrency = () => {
+    const userLocale = navigator.language || 'en-US'
+    setLocale(userLocale)
+    const region = (userLocale.split('-')[1] || 'US').toUpperCase()
+    const map = {
+      MW: 'MWK', // Malawi
+      US: 'USD',
+      GB: 'GBP',
+      KE: 'KES',
+      ZA: 'ZAR',
+      NG: 'NGN',
+      TZ: 'TZS',
+      ZM: 'ZMW',
+      EU: 'EUR',
+      AU: 'AUD',
+    }
+    setCurrencyCode(map[region] || 'USD')
+  }
 
   const loadServices = async () => {
     try {
@@ -38,9 +77,27 @@ const Order = () => {
     setError('')
 
     try {
-      // Submit as a quote request
-      await quotesAPI.create(formData)
+      // If user not logged in, save the pending quote and redirect to login
+      if (!isAuthenticated) {
+        sessionStorage.setItem('pendingQuote', JSON.stringify(formData))
+        // attach locale/currency as well so the backend can format emails
+        sessionStorage.setItem('pendingQuoteMeta', JSON.stringify({ currencyCode, locale }))
+        navigate('/login?next=/order')
+        return
+      }
+
+      // build payload: ensure budget is numeric (or undefined)
+      const payload = {
+        ...formData,
+        budget: formData.budget ? Number(formData.budget) : undefined,
+        currency: currencyCode,
+      }
+
+      await quotesAPI.create(payload)
+
+      setLastSubmittedEmail(formData.customerEmail)
       setSubmitted(true)
+      // clear form
       setFormData({
         customerName: '',
         customerEmail: '',
@@ -49,6 +106,14 @@ const Order = () => {
         description: '',
         budget: ''
       })
+      // remove any pending quote
+      sessionStorage.removeItem('pendingQuote')
+      sessionStorage.removeItem('pendingQuoteMeta')
+
+      // scroll to top so user sees the confirmation
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+
+      // clear message after some time
       setTimeout(() => setSubmitted(false), 10000)
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit request. Please try again.')
@@ -60,6 +125,43 @@ const Order = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
+  // If user just logged in and there is a pending quote, auto-submit it
+
+  useEffect(() => {
+    const pending = sessionStorage.getItem('pendingQuote')
+    if (pending && isAuthenticated) {
+      try {
+        const data = JSON.parse(pending)
+        const meta = JSON.parse(sessionStorage.getItem('pendingQuoteMeta') || '{}')
+        setFormData((f) => ({ ...f, ...data }))
+        if (meta.currencyCode) setCurrencyCode(meta.currencyCode)
+        if (meta.locale) setLocale(meta.locale)
+
+        // submit after a tick so states are applied
+        setTimeout(async () => {
+          try {
+            const payload = {
+              ...data,
+              budget: data.budget ? Number(data.budget) : undefined,
+              currency: meta.currencyCode || currencyCode,
+            }
+            await quotesAPI.create(payload)
+            setLastSubmittedEmail(data.customerEmail)
+            setSubmitted(true)
+            sessionStorage.removeItem('pendingQuote')
+            sessionStorage.removeItem('pendingQuoteMeta')
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+            setTimeout(() => setSubmitted(false), 10000)
+          } catch (e) {
+            console.error('Auto-submit pending quote failed', e)
+          }
+        }, 300)
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, [isAuthenticated])
 
   return (
     <div className="pt-24">
@@ -78,7 +180,7 @@ const Order = () => {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               <p className="font-bold text-lg">Quote Request Submitted Successfully!</p>
-              <p>We'll contact you shortly with a detailed quote. A confirmation email has been sent to {formData.customerEmail}.</p>
+              <p>We'll contact you shortly with a detailed quote. A confirmation email has been sent to {lastSubmittedEmail || formData.customerEmail}.</p>
             </div>
           )}
 

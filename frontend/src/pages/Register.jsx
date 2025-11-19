@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const Register = () => {
@@ -13,6 +13,9 @@ const Register = () => {
   const [loading, setLoading] = useState(false)
   const { register } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const params = new URLSearchParams(location.search)
+  const next = params.get('next') || '/'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -44,7 +47,7 @@ const Register = () => {
     })
     
     if (result.success) {
-      navigate('/')
+      navigate(next)
     } else {
       setError(result.error)
     }

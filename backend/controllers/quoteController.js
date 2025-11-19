@@ -11,7 +11,16 @@ export const createQuote = async (req, res) => {
       serviceType,
       description,
       budget,
+      currency,
     } = req.body;
+
+    // Coerce budget to Float (Prisma expects Float or null) and
+    // ensure userId is null when unauthenticated.
+    let parsedBudget = null;
+    if (budget !== undefined && budget !== null && budget !== '') {
+      const b = parseFloat(budget);
+      parsedBudget = Number.isNaN(b) ? null : b;
+    }
 
     const quote = await prisma.quote.create({
       data: {
@@ -20,12 +29,18 @@ export const createQuote = async (req, res) => {
         customerPhone,
         serviceType,
         description,
-        budget,
-        userId: req.user?.id,
+        budget: parsedBudget,
+        userId: req.user?.id ?? null,
       },
     });
 
     logger.info(`New quote request: ${quote.id} from ${customerEmail}`);
+
+    // Format budget for emails using provided currency (if any)
+    const currencyCode = (currency || 'USD').toUpperCase();
+    const formattedBudget = parsedBudget != null
+      ? new Intl.NumberFormat('en-US', { style: 'currency', currency: currencyCode }).format(parsedBudget)
+      : null;
 
     // Send email to admin
     await sendAdminNotification({
@@ -37,7 +52,7 @@ export const createQuote = async (req, res) => {
         <p><strong>Email:</strong> ${customerEmail}</p>
         <p><strong>Phone:</strong> ${customerPhone || 'N/A'}</p>
         <p><strong>Service Type:</strong> ${serviceType}</p>
-        <p><strong>Budget:</strong> ${budget ? `$${budget}` : 'Not specified'}</p>
+        <p><strong>Budget:</strong> ${formattedBudget ? formattedBudget : 'Not specified'}</p>
         <p><strong>Description:</strong></p>
         <p>${description}</p>
         <p><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
@@ -56,7 +71,7 @@ export const createQuote = async (req, res) => {
         <h3>Request Details:</h3>
         <p><strong>Quote ID:</strong> ${quote.id}</p>
         <p><strong>Service Type:</strong> ${serviceType}</p>
-        <p><strong>Budget:</strong> ${budget ? `$${budget}` : 'Not specified'}</p>
+        <p><strong>Budget:</strong> ${formattedBudget ? formattedBudget : 'Not specified'}</p>
         <p>Our team will contact you within 24-48 hours with a detailed quote.</p>
         <p>Best regards,<br>Your Team</p>
       `,
