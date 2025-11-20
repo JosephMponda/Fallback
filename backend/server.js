@@ -1,7 +1,9 @@
 import express from 'express';
+import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 import logger from './config/logger.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
@@ -20,6 +22,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Resolve __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
@@ -33,9 +39,18 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false,
 }));
 
+// Serve resource images (e.g. backend/Resources) as static assets
+app.use('/resources', express.static(path.join(__dirname, 'Resources')));
+
 // CORS configuration
+const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:3000'].filter(Boolean);
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps, curl, or same-origin)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('CORS policy: This origin is not allowed'));
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };

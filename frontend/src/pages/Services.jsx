@@ -54,10 +54,11 @@ const Services = () => {
   const loadServices = async () => {
     try {
       const response = await servicesAPI.getAll(true)
-      // If we have services from API, use them; otherwise use fallback
-      if (response.data.services && response.data.services.length > 0) {
+      // API returns { success, count, data: { services } }
+      const apiServicesRaw = response?.data?.services || response?.data?.data?.services || []
+      if (apiServicesRaw && apiServicesRaw.length > 0) {
         // Convert API services to display format
-        const apiServices = response.data.services.map(service => ({
+        const apiServices = apiServicesRaw.map(service => ({
           title: service.name,
           icon: getServiceIcon(service.name),
           description: service.description,
@@ -91,68 +92,120 @@ const Services = () => {
     return iconMap[key] || '📄'
   }
 
-  const displayServices = services.length > 0 ? services : fallbackServices
+  // Map service titles/keywords to image filenames located in backend/Resources.
+  // Returns a full URL (using `VITE_BACKEND_URL` or deriving from `VITE_API_URL`) or null when none matched.
+  const getServiceImage = (title) => {
+    const map = {
+      'offset': 'Speedmaster.png',
+      'screen': 'Screen-Printing .png',
+      'large format': 'Large-Format_print.png',
+      'banner': 'Large-Format_print.png',
+      'video': 'video-production.png',
+      'design': 'digital-printing.png',
+      'digital': 'digital-printing.png'
+    }
+
+    const key = Object.keys(map).find(k => (title || '').toLowerCase().includes(k))
+    if (!key) return null
+
+    // Prefer explicit backend URL, otherwise derive from VITE_API_URL (strip trailing /api)
+    const apiUrl = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL
+    const backendBase = apiUrl
+      ? apiUrl.replace(/\/api\/?$/, '')
+      : 'http://localhost:5000'
+
+    const filename = map[key]
+    return `${backendBase}/resources/${encodeURIComponent(filename)}`
+  }
 
   return (
-    <div className="pt-24">
-      <section className="section-padding bg-gradient-to-br from-primary-900 to-primary-700 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">Our Services</h1>
-          <p className="text-xl">Complete printing and media production solutions for businesses across Malawi</p>
-        </div>
-      </section>
+    <div>
+        <section className="section-padding bg-gray-50">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">Our Services</h1>
+            <p className="text-xl">Complete printing and media production solutions for businesses across Malawi</p>
+          </div>
+        </section>
 
-      <section className="section-padding bg-white">
-        <div className="max-w-7xl mx-auto">
-          {loading && (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
-              <p className="mt-4 text-gray-600">Loading services...</p>
-            </div>
-          )}
+        <section className="section-padding bg-white">
+          <div className="max-w-7xl mx-auto">
+            {loading && (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
+                <p className="mt-4 text-gray-600">Loading services...</p>
+              </div>
+            )}
 
-          {!loading && (
-            <>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                {displayServices.map((service, index) => (
-                  <div key={index} className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all">
-                    <div className="flex items-start space-x-4 mb-6">
-                      <div className="text-5xl">{service.icon}</div>
-                      <div>
-                        <h2 className="text-3xl font-bold text-gray-900 mb-2">{service.title}</h2>
-                        <p className="text-gray-600">{service.description}</p>
-                        {service.price && (
-                          <p className="text-primary-600 font-bold mt-2">Starting at ${service.price}</p>
-                        )}
-                      </div>
-                    </div>
-                    {service.items && (
-                      <div className="grid grid-cols-2 gap-3">
-                        {service.items.map((item, idx) => (
-                          <div key={idx} className="flex items-center space-x-2 text-gray-700">
-                            <svg className="w-5 h-5 text-primary-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                            <span className="text-sm">{item}</span>
+            {!loading && (
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                  {services.map((service, index) => (
+                    <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all">
+                      {(() => {
+                        const img = getServiceImage(service.title || service.name || '')
+                        if (img) {
+                          return (
+                            <div className="w-full h-56 md:h-72 lg:h-96 relative bg-gray-100">
+                              <img
+                                src={img}
+                                alt={service.title}
+                                loading="lazy"
+                                decoding="async"
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                              <div className="absolute left-6 bottom-6 text-white">
+                                <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold drop-shadow-lg">{service.title}</h2>
+                                {service.price && (
+                                  <p className="text-primary-200 font-semibold mt-1 drop-shadow">Starting at ${service.price}</p>
+                                )}
+                              </div>
+                            </div>
+                          )
+                        }
+                        // fallback: emoji + text
+                        return (
+                          <div className="flex items-start space-x-4 p-8">
+                            <div className="text-5xl">{service.icon}</div>
+                            <div>
+                              <h2 className="text-3xl font-bold text-gray-900 mb-2">{service.title}</h2>
+                              <p className="text-gray-600">{service.description}</p>
+                              {service.price && (
+                                <p className="text-primary-600 font-bold mt-2">Starting at ${service.price}</p>
+                              )}
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+                        )
+                      })()}
+                      {service.items && (
+                        <div className="p-6">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {service.items.map((item, idx) => (
+                              <div key={idx} className="flex items-center space-x-2 text-gray-700">
+                                <svg className="w-5 h-5 text-primary-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                                <span className="text-sm">{item}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
 
-              <div className="mt-16 text-center">
-                <Link to="/order" className="btn-primary text-lg">
-                  Request a Quote
-                </Link>
-              </div>
-            </>
-          )}
-        </div>
-      </section>
-    </div>
-  )
-}
+                <div className="mt-16 text-center">
+                  <Link to="/order" className="btn-primary text-lg">
+                    Request a Quote
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+      </div>
+    )
+  }
 
-export default Services
+  export default Services
