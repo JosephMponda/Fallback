@@ -13,7 +13,7 @@ const Footer = () => {
               </div>
               <div>
                 <h3 className="font-bold text-xl">Everest Printing Press</h3>
-                <p className="text-gray-400 text-sm">Excellence in Print</p>
+                <p className="text-gray-400 text-sm">Let the good times roll</p>
               </div>
             </div>
             <p className="text-gray-400 mb-4">
