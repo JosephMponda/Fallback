@@ -112,6 +112,8 @@ const Order = () => {
       setServices(response.data.services)
     } catch (err) {
       console.error('Error loading services:', err)
+      const msg = err.response?.data?.message || (err.request ? 'Network error: could not reach the backend. Is the backend running?' : err.message)
+      setError(msg)
     } finally {
       setLoadingServices(false)
     }
@@ -163,7 +165,11 @@ const Order = () => {
       // set the quote we want to navigate with; an effect will observe visibility
       setPendingNavigateQuote(quoteData)
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to submit request. Please try again.')
+      let message = 'Failed to submit request. Please try again.'
+      if (err.response?.data?.message) message = err.response.data.message
+      else if (err.request) message = 'Network error: could not reach the backend. Is the backend server running?'
+      else if (err.message) message = err.message
+      setError(message)
     } finally {
       setLoading(false)
     }
@@ -246,6 +252,7 @@ const Order = () => {
             setPendingNavigateQuote(quoteData)
           } catch (e) {
             console.error('Auto-submit pending quote failed', e)
+            if (e.request) setError('Auto-submit failed: could not reach backend. Please check the server and try again.')
           }
         }, 300)
       } catch (e) {
@@ -253,6 +260,30 @@ const Order = () => {
       }
     }
   }, [isAuthenticated])
+
+  // When a quote has been created and we set `pendingNavigateQuote`, navigate
+  // to the payment page after giving the user a moment to see the success UI.
+  useEffect(() => {
+    if (!pendingNavigateQuote) return
+
+    // ensure the success message is visible before navigating
+    try {
+      successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    } catch (e) {
+      // ignore
+    }
+
+    const t = setTimeout(() => {
+      try {
+        navigate('/payment', { state: { quote: pendingNavigateQuote, meta: { locale } } })
+      } catch (e) {
+        // fallback: navigate without state
+        navigate('/payment')
+      }
+    }, 1800)
+
+    return () => clearTimeout(t)
+  }, [pendingNavigateQuote, navigate, locale])
 
   return (
     <div className="pt-24">
@@ -266,7 +297,7 @@ const Order = () => {
       <section className="section-padding bg-gray-50">
         <div className="max-w-4xl mx-auto">
           {submitted && (
-            <div className="mb-8 p-6 bg-green-100 border-2 border-green-500 rounded-lg text-green-800 text-center">
+            <div ref={successRef} className="mb-8 p-6 bg-green-100 border-2 border-green-500 rounded-lg text-green-800 text-center">
               <svg className="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
