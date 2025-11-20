@@ -95,15 +95,15 @@ const Services = () => {
   // Map service titles/keywords to image filenames located in backend/Resources.
   // Returns a full URL (using `VITE_BACKEND_URL` or deriving from `VITE_API_URL`) or null when none matched.
   const getServiceImage = (title) => {
-    const map = {
-      'offset': 'Speedmaster.png',
-      'screen': 'Screen-Printing .png',
-      'large format': 'Large-Format_print.png',
-      'banner': 'Large-Format_print.png',
-      'video': 'video-production.png',
-      'design': 'digital-printing.png',
-      'digital': 'digital-printing.png'
-    }
+      const map = {
+        'offset': 'Speedmaster.png',
+        'screen': 'Screen-Printing.png',
+        'large format': 'Large-Format-Print.png',
+        'banner': 'Large-Format-Print.png',
+        'video': 'Video-Production.png',
+        'design': 'Design-Services.png',
+        'digital': 'Digital-Services.png'
+      }
 
     const key = Object.keys(map).find(k => (title || '').toLowerCase().includes(k))
     if (!key) return null

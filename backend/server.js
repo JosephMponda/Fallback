@@ -27,16 +27,30 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Security middleware
+// Build imgSrc directives dynamically so we can allow localhost/http in development
+const imgSrcDirectives = ["'self'", 'data:', 'https:']
+if (process.env.NODE_ENV === 'development') {
+  // allow http resources during local development (localhost backends)
+  imgSrcDirectives.push('http:')
+}
+if (process.env.FRONTEND_URL) imgSrcDirectives.push(process.env.FRONTEND_URL)
+if (process.env.BACKEND_URL) imgSrcDirectives.push(process.env.BACKEND_URL)
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: imgSrcDirectives,
     },
   },
   crossOriginEmbedderPolicy: false,
+  // Control Cross-Origin-Resource-Policy (CORP). In development allow cross-origin
+  // so localhost image requests aren't blocked by the browser. Keep stricter policy in production.
+  crossOriginResourcePolicy: {
+    policy: process.env.NODE_ENV === 'development' ? 'cross-origin' : 'same-origin'
+  },
 }));
 
 // Serve resource images (e.g. backend/Resources) as static assets
