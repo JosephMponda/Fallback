@@ -49,7 +49,7 @@ const Navbar = () => {
                 Everest Printing
               </h1>
               <p className={`text-xs ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'}`}>
-                Press Excellence
+                Press
               </p>
             </div>
           </Link>

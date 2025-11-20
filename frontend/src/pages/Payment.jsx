@@ -129,7 +129,7 @@ const Payment = () => {
 
           <div className="mt-6 flex justify-between items-center">
             <button onClick={handleBack} className="btn-ghost">Back</button>
-            <a className="btn-primary" href="mailto:grandgaze01@gmail.com?subject=Payment%20Confirmation">Email Us Payment Details</a>
+            <a className="btn-primary" href="mailto:grandgaze01@gmail.com?subject=PaymentConfirmation">Email Us Payment Details</a>
           </div>
         </div>
       </section>
