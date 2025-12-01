@@ -1,0 +1,11 @@
+
+> everest-printing-press@1.0.0 dev
+> vite
+
+6:09:25 AM [vite] (client) Re-optimizing dependencies because lockfile has changed
+Port 3000 is in use, trying another one...
+
+  VITE v7.1.12  ready in 320 ms
+
+  ➜  Local:   http://localhost:3001/
+  ➜  Network: http://192.168.0.2:3001/
