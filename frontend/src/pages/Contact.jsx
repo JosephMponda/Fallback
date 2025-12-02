@@ -82,7 +82,7 @@ const Contact = () => {
   ]
 
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       <section className="section-padding bg-gradient-to-br from-primary-900 to-primary-700 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">Contact Us</h1>

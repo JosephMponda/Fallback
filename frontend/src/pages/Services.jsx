@@ -119,7 +119,7 @@ const Services = () => {
   }
 
   return (
-    <div>
+    <div className="pt-20">
         <section className="section-padding bg-gray-50">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">Our Services</h1>
