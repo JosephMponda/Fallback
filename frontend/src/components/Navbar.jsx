@@ -37,33 +37,36 @@ const Navbar = () => {
     <nav className={`fixed w-full z-50 transition-all duration-300 ${
       isScrolled || !isHome ? 'bg-white shadow-lg py-4' : 'bg-transparent py-6'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+        <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-          {/* Logo image */}
-          <img
-            src="/src/assets/Everest-Logo.svg" // or Everest-Logo.ico/Everest-Logo.svg
-            alt="Everest Printing Logo"
-            className="w-20 h-19 rounded-lg object-cover"
-          />
-            <div>
-              <h1 className={`font-bold text-xl ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}>
+          <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg overflow-hidden">
+              <img
+                src="/src/assets/Everest-Logo-2.ico"
+                alt="Everest Printing Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="truncate">
+              <h1 className={`font-bold text-lg sm:text-xl md:text-2xl ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}>
                 Everest Printing
               </h1>
-              <p className={`text-xs ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'}`}>
+              <p className={`text-xs sm:text-sm ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'}`}>
                 Press
               </p>
             </div>
           </Link>
 
+
+
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8 flex-1 justify-end min-w-0">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`font-medium transition-colors relative group ${
+                className={`font-medium transition-colors relative group truncate ${
                   location.pathname === link.path
                     ? (isScrolled || !isHome ? 'text-primary-600' : 'text-white')
                     : (isScrolled || !isHome ? 'text-gray-700 hover:text-primary-600' : 'text-gray-200 hover:text-white')
@@ -75,10 +78,10 @@ const Navbar = () => {
                 }`}></span>
               </Link>
             ))}
-            
+
             {user ? (
               <>
-                <span className={`text-sm ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'}`}>
+                <span className={`text-sm ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200 truncate'}`}>
                   {user.name}
                 </span>
                 <button onClick={handleLogout} className="btn-primary">
@@ -129,7 +132,7 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            
+
             {user ? (
               <>
                 <div className="py-3 px-4 text-gray-600 text-sm border-t mt-2">
@@ -160,7 +163,7 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-            
+
             <Link
               to="/order"
               onClick={() => setIsMobileMenuOpen(false)}
