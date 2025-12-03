@@ -40,25 +40,14 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      // Allow fonts from our own origin
-      fontSrc: ["'self'"],
-      // Allow images from our own origin, data URIs, and HTTPS sources
-      imgSrc: imgSrcDirectives,
-      // Allow scripts from our own origin
-      scriptSrc: ["'self'"],
-      // Allow inline styles for now, as removing them might require a larger frontend refactor
       styleSrc: ["'self'", "'unsafe-inline'"],
-      // Disallow all plugins
-      objectSrc: ["'none'"],
-      // Prevent the site from being embedded in iframes
-      frameAncestors: ["'none'"],
-      // Only allow forms to be submitted to our own origin
-      formAction: ["'self'"],
-      // Only allow connections to our own origin
-      connectSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      imgSrc: imgSrcDirectives,
     },
   },
   crossOriginEmbedderPolicy: false,
+  // Control Cross-Origin-Resource-Policy (CORP). In development allow cross-origin
+  // so localhost image requests aren't blocked by the browser. Keep stricter policy in production.
   crossOriginResourcePolicy: {
     policy: process.env.NODE_ENV === 'development' ? 'cross-origin' : 'same-origin'
   },

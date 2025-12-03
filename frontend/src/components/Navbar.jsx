@@ -1,47 +1,103 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const Navbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { user, logout } = useAuth()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const navLinks = [
-    { path: '/about', label: 'About us' },
-    { path: '/businesses', label: 'Businesses' },
-    { path: '/giving-forward', label: 'Giving Forward' },
-    { path: '/news', label: 'News' },
-    { path: '/careers', label: 'Careers' },
-    { path: '/contact', label: 'Contact Us' },
-  ];
+    { path: '/', label: 'Home' },
+    { path: '/services', label: 'Services' },
+    { path: '/gallery', label: 'Gallery' },
+    { path: '/about', label: 'About' },
+    { path: '/contact', label: 'Contact' },
+  ]
+
+  const isHome = location.pathname === '/'
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+    setIsMobileMenuOpen(false)
+  }
 
   return (
-    <nav className="bg-brand-blue text-white shadow-lg sticky top-0 z-50">
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${
+      isScrolled || !isHome ? 'bg-white shadow-lg py-4' : 'bg-transparent py-6'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold">
-            Everest Printing Press
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-transform">
+              <span className="text-white font-bold text-xl">EP</span>
+            </div>
+            <div>
+              <h1 className={`font-bold text-xl ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}>
+                Everest Printing
+              </h1>
+              <p className={`text-xs ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'}`}>
+                Press
+              </p>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`font-medium transition-colors hover:text-brand-gold ${
-                  location.pathname === link.path ? 'text-brand-gold' : ''
+                className={`font-medium transition-colors relative group ${
+                  location.pathname === link.path
+                    ? (isScrolled || !isHome ? 'text-primary-600' : 'text-white')
+                    : (isScrolled || !isHome ? 'text-gray-700 hover:text-primary-600' : 'text-gray-200 hover:text-white')
                 }`}
               >
                 {link.label}
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full ${
+                  location.pathname === link.path ? 'w-full' : ''
+                }`}></span>
               </Link>
             ))}
+            
+            {user ? (
+              <>
+                <span className={`text-sm ${isScrolled || !isHome ? 'text-gray-600' : 'text-gray-200'}`}>
+                  {user.name}
+                </span>
+                <button onClick={handleLogout} className="btn-primary">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className={`font-medium ${isScrolled || !isHome ? 'text-gray-700 hover:text-primary-600' : 'text-gray-200 hover:text-white'}`}>
+                  Login
+                </Link>
+                <Link to="/order" className="btn-primary">
+                  Order Now
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg"
+            className={`md:hidden p-2 rounded-lg ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMobileMenuOpen ? (
@@ -55,24 +111,65 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden pb-4">
+          <div className="md:hidden mt-4 bg-white rounded-lg shadow-xl p-4">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`block py-2 px-4 rounded-lg font-medium transition-colors ${
-                  location.pathname === link.path ? 'bg-brand-gold text-white' : 'hover:bg-gray-700'
+                className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
+                  location.pathname === link.path
+                    ? 'bg-primary-50 text-primary-600'
+                    : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >
                 {link.label}
               </Link>
             ))}
+            
+            {user ? (
+              <>
+                <div className="py-3 px-4 text-gray-600 text-sm border-t mt-2">
+                  Welcome, {user.name}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-center mt-2 py-3 px-4 rounded-lg font-medium text-red-600 hover:bg-red-50"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block mt-4 text-center py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block mt-2 text-center py-3 px-4 rounded-lg font-medium text-primary-600 hover:bg-primary-50"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+            
+            <Link
+              to="/order"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block mt-4 text-center btn-primary"
+            >
+              Order Now
+            </Link>
           </div>
         )}
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar
