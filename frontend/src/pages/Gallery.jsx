@@ -28,7 +28,7 @@ const Gallery = () => {
     { category: 'video', title: 'Product Commercial', description: '30-second TV ad', imageUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800' },
     { category: 'offset', title: 'Annual Reports', description: '100 page full-color report', imageUrl: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800' },
     { category: 'screen', title: 'Team Uniforms', description: 'Custom sports jerseys', imageUrl: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=800' },
-    { category: 'banner', title: 'Billboard Design', description: 'Large format outdoor', imageUrl: 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=800' },
+    { category: 'banner', title: 'Billboard Design', description: 'Large format outdoor', imageUrl: 'https://images.unsplash.com/photo-1580670029149-5c00eec8bb66?w=800' },
     { category: 'video', title: 'Event Coverage', description: 'Wedding videography', imageUrl: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800' }
   ]
 
