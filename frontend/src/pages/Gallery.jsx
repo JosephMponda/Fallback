@@ -21,7 +21,7 @@ const Gallery = () => {
     { category: 'offset', title: 'Business Brochures', description: '500 full-color brochures', imageUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800' },
     { category: 'offset', title: 'Magazine Publication', description: '1000 copies, perfect binding', imageUrl: 'https://images.unsplash.com/photo-1512314889357-e157c22f938d?w=800' },
     { category: 'screen', title: 'Event T-Shirts', description: '200 custom printed shirts', imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800' },
-    { category: 'screen', title: 'Promotional Tote Bags', description: '300 branded bags', imageUrl: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800' },
+    { category: 'screen', title: 'Promotional Tote Bags', description: '300 branded bags', imageUrl: 'https://images.unsplash.com/photo-1578237493287-8d4d2b03591a?w=800' },
     { category: 'banner', title: 'Store Front Banner', description: '10ft x 5ft vinyl banner', imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800' },
     { category: 'banner', title: 'Trade Show Display', description: 'Retractable banner stand', imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800' },
     { category: 'video', title: 'Corporate Video', description: '3-minute company profile', imageUrl: 'https://images.unsplash.com/photo-1654723011680-0e037c2a4f18?w=800' },
