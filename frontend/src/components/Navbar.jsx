@@ -41,9 +41,12 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-transform">
-              <span className="text-white font-bold text-xl">EP</span>
-            </div>
+          {/* Logo image */}
+          <img
+            src="/src/assets/Everest-Logo.svg" // or Everest-Logo.ico/Everest-Logo.svg
+            alt="Everest Printing Logo"
+            className="w-20 h-19 rounded-lg object-cover"
+          />
             <div>
               <h1 className={`font-bold text-xl ${isScrolled || !isHome ? 'text-gray-900' : 'text-white'}`}>
                 Everest Printing

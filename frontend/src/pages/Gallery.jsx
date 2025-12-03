@@ -6,6 +6,7 @@ const Gallery = () => {
   const [galleryItems, setGalleryItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [imageErrors, setImageErrors] = useState(new Set())
 
   const categories = [
     { id: 'all', label: 'All Work' },
@@ -15,20 +16,20 @@ const Gallery = () => {
     { id: 'video', label: 'Video Production' }
   ]
 
-  // Fallback gallery items
+  // Fallback gallery items with placeholder images
   const fallbackItems = [
-    { category: 'offset', title: 'Business Brochures', description: '500 full-color brochures' },
-    { category: 'offset', title: 'Magazine Publication', description: '1000 copies, perfect binding' },
-    { category: 'screen', title: 'Event T-Shirts', description: '200 custom printed shirts' },
-    { category: 'screen', title: 'Promotional Tote Bags', description: '300 branded bags' },
-    { category: 'banner', title: 'Store Front Banner', description: '10ft x 5ft vinyl banner' },
-    { category: 'banner', title: 'Trade Show Display', description: 'Retractable banner stand' },
-    { category: 'video', title: 'Corporate Video', description: '3-minute company profile' },
-    { category: 'video', title: 'Product Commercial', description: '30-second TV ad' },
-    { category: 'offset', title: 'Annual Reports', description: '100 page full-color report' },
-    { category: 'screen', title: 'Team Uniforms', description: 'Custom sports jerseys' },
-    { category: 'banner', title: 'Billboard Design', description: 'Large format outdoor' },
-    { category: 'video', title: 'Event Coverage', description: 'Wedding videography' }
+    { category: 'offset', title: 'Business Brochures', description: '500 full-color brochures', imageUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800' },
+    { category: 'offset', title: 'Magazine Publication', description: '1000 copies, perfect binding', imageUrl: 'https://images.unsplash.com/photo-1512314889357-e157c22f938d?w=800' },
+    { category: 'screen', title: 'Event T-Shirts', description: '200 custom printed shirts', imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800' },
+    { category: 'screen', title: 'Promotional Tote Bags', description: '300 branded bags', imageUrl: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800' },
+    { category: 'banner', title: 'Store Front Banner', description: '10ft x 5ft vinyl banner', imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800' },
+    { category: 'banner', title: 'Trade Show Display', description: 'Retractable banner stand', imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800' },
+    { category: 'video', title: 'Corporate Video', description: '3-minute company profile', imageUrl: 'https://images.unsplash.com/photo-1654723011680-0e037c2a4f18?w=800' },
+    { category: 'video', title: 'Product Commercial', description: '30-second TV ad', imageUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800' },
+    { category: 'offset', title: 'Annual Reports', description: '100 page full-color report', imageUrl: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800' },
+    { category: 'screen', title: 'Team Uniforms', description: 'Custom sports jerseys', imageUrl: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=800' },
+    { category: 'banner', title: 'Billboard Design', description: 'Large format outdoor', imageUrl: 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=800' },
+    { category: 'video', title: 'Event Coverage', description: 'Wedding videography', imageUrl: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800' }
   ]
 
   useEffect(() => {
@@ -76,6 +77,10 @@ const Gallery = () => {
     return iconMap[category] || '📄'
   }
 
+  const handleImageError = (index) => {
+    setImageErrors(prev => new Set([...prev, index]))
+  }
+
   return (
     <div className="pt-20">
       <section className="section-padding bg-gradient-to-br from-primary-900 to-primary-700 text-white">
@@ -115,21 +120,22 @@ const Gallery = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredItems.map((item, index) => (
                   <div key={index} className="card group cursor-pointer">
-                    {item.imageUrl ? (
-                      <div className="aspect-video overflow-hidden">
+                    <div className="aspect-video overflow-hidden relative">
+                      {!imageErrors.has(index) && item.imageUrl ? (
                         <img 
                           src={item.imageUrl} 
                           alt={item.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          onError={() => handleImageError(index)}
                         />
-                      </div>
-                    ) : (
-                      <div className="aspect-video bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-                        <div className="text-6xl group-hover:scale-110 transition-transform">
-                          {getCategoryIcon(item.category)}
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                          <div className="text-6xl group-hover:scale-110 transition-transform">
+                            {getCategoryIcon(item.category)}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                     <div className="p-6">
                       <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
                       <p className="text-gray-600">{item.description}</p>
