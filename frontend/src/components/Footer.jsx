@@ -34,7 +34,7 @@ const Footer = () => {
           ))}
         </div>
         <div className="mt-16 pt-8 border-t border-brand-gray flex flex-col md:flex-row justify-between items-center">
-          <p className="text-brand-gray">© 2025 Alghanim Industries & Yusuf A. Alghanim & Sons, W.L.L</p>
+          <p className="text-brand-gray">© 2025 Everest Printing Press</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link to="/" className="text-brand-gray hover:text-white">Terms & Conditions</Link>
             <Link to="/" className="text-brand-gray hover:text-white">Website Terms of Use</Link>
