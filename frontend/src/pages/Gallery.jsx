@@ -18,11 +18,11 @@ const Gallery = () => {
 
   // Fallback gallery items with placeholder images
   const fallbackItems = [
-    { category: 'offset', title: 'Business Brochures', description: '500 full-color brochures', imageUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800' },
-    { category: 'offset', title: 'Magazine Publication', description: '1000 copies, perfect binding', imageUrl: 'https://images.unsplash.com/photo-1512314889357-e157c22f938d?w=800' },
-    { category: 'screen', title: 'Event T-Shirts', description: '200 custom printed shirts', imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800' },
+    { category: 'offset', title: 'Business Brochures', description: '500 full-color brochures', imageUrl: 'https://images.unsplash.com/photo-1624259395247-f57268575d69?w=800' },
+    { category: 'offset', title: 'Magazine Publication', description: '1000 copies, perfect binding', imageUrl: 'https://images.unsplash.com/photo-1598113571597-3a3d9c70b8c8?w=800' },
+    { category: 'screen', title: 'Event T-Shirts', description: '200 custom printed shirts', imageUrl: 'https://images.unsplash.com/photo-1739001411231-4fc0f4140259?w=800' },
     { category: 'screen', title: 'Promotional Tote Bags', description: '300 branded bags', imageUrl: 'https://images.unsplash.com/photo-1578237493287-8d4d2b03591a?w=800' },
-    { category: 'banner', title: 'Store Front Banner', description: '10ft x 5ft vinyl banner', imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800' },
+    { category: 'banner', title: 'Store Front Banner', description: '10ft x 5ft vinyl banner', imageUrl: 'https://images.unsplash.com/photo-1558452919-08ae4aea8e29?w=800' },
     { category: 'banner', title: 'Trade Show Display', description: 'Retractable banner stand', imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800' },
     { category: 'video', title: 'Corporate Video', description: '3-minute company profile', imageUrl: 'https://images.unsplash.com/photo-1654723011680-0e037c2a4f18?w=800' },
     { category: 'video', title: 'Product Commercial', description: '30-second TV ad', imageUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800' },
