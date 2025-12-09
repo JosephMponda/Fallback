@@ -2,19 +2,20 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const About = () => {
+  // ORIGINAL EMOJIS — BACK AND PERFECT
   const team = [
-    { name: 'Management Team', role: 'Leadership & Strategy', icon: 'Management' },
-    { name: 'Design Team', role: 'Creative Professionals', icon: 'Design' },
-    { name: 'Production Team', role: 'Print Specialists', icon: 'Production' },
-    { name: 'Video Team', role: 'Media Production', icon: 'Camera' }
+    { name: 'Management Team',   role: 'Leadership & Strategy',   icon: '👔' },
+    { name: 'Design Team',       role: 'Creative Professionals', icon: '🎨' },
+    { name: 'Production Team',   role: 'Print Specialists',       icon: '⚙️' },
+    { name: 'Video Team',        role: 'Media Production',        icon: '🎥' }
   ]
 
   const timeline = [
-    { year: '2014', event: 'Everest Printing Press Founded', description: 'Started with basic offset printing' },
-    { year: '2016', event: 'Expanded Services', description: 'Added screen printing and design' },
-    { year: '2018', event: 'New Equipment', description: 'Invested in state-of-the-art technology' },
-    { year: '2020', event: 'Video Production Launched', description: 'Professional video services added' },
-    { year: '2024', event: 'Digital Transformation', description: 'Online ordering & digital services' }
+    { year: '2014', event: 'Everest Printing Press Founded', description: 'Started with basic offset printing services' },
+    { year: '2016', event: 'Expanded Services', description: 'Added screen printing and design services' },
+    { year: '2018', event: 'New Equipment', description: 'Invested in state-of-the-art printing technology' },
+    { year: '2020', event: 'Video Production', description: 'Launched professional video production services' },
+    { year: '2024', event: 'Digital Transformation', description: 'Online ordering and expanded digital services' }
   ]
 
   return (
@@ -31,7 +32,6 @@ const About = () => {
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Our Story */}
             <div>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
               <p className="text-gray-700 mb-4 text-lg">
@@ -53,19 +53,15 @@ const About = () => {
               </p>
             </div>
 
-            {/* MISSION CARD — Grayish-black overlay for maximum contrast */}
+            {/* MISSION CARD — Your perfect version with bg-black/15 */}
             <div className="relative rounded-xl overflow-hidden h-96 lg:h-[400px] shadow-xl">
-              {/* Full background SVG */}
               <img
                 src="/src/assets/Our-mission.svg"
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
               />
-
-              {/* Very soft black overlay + soft blur */}
               <div className="absolute inset-0 bg-black/15 backdrop-blur-[1px]"></div>
 
-              {/* White text — crisp text */}
               <div className="relative h-full flex flex-col justify-center items-center px-10 text-center text-white">
                 <h3 className="text-3xl md:text-4xl font-bold mb-6 drop-shadow-2xl">
                   Our Mission
@@ -81,7 +77,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Timeline, Team, CTA — unchanged */}
+      {/* Timeline */}
       <section className="section-padding bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -105,6 +101,7 @@ const About = () => {
         </div>
       </section>
 
+      {/* Team — WITH YOUR ORIGINAL EMOJIS BACK */}
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -125,6 +122,7 @@ const About = () => {
         </div>
       </section>
 
+      {/* CTA */}
       <section className="section-padding bg-gradient-to-br from-primary-600 to-primary-800 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Work With Us?</h2>
