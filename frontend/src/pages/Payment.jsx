@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import AirtelLogo from '../assets/Airtel-logo.svg'
-import TnmLogo from '../assets/TNM-logo.svg'
+import AirtelLogo from '../assets/airtelmoney.png'
+import TnmLogo from '../assets/TNM-Mpamba.png'
 import NationalBankLogo from '../assets/National-Bank-logo.svg'
 
 const copy = async (text) => {
