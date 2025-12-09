@@ -41,7 +41,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg overflow-hidden">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 overflow-hidden">
               <img
                 src="/src/assets/Everest-Logo-2.ico"
                 alt="Everest Printing Logo"

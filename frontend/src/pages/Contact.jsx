@@ -107,6 +107,7 @@ const Contact = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* === FORM (unchanged) === */}
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
               
@@ -127,95 +128,66 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    disabled={loading}
+                  <input type="text" name="name" required value={formData.name} onChange={handleChange} disabled={loading}
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary-600 focus:outline-none disabled:bg-gray-100"
-                    placeholder="Your Name"
-                  />
+                    placeholder="Your Name" />
                 </div>
 
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    disabled={loading}
+                  <input type="email" name="email" required value={formData.email} onChange={handleChange} disabled={loading}
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary-600 focus:outline-none disabled:bg-gray-100"
-                    placeholder="your@email.com"
-                  />
+                    placeholder="your@email.com" />
                 </div>
 
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    disabled={loading}
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} disabled={loading}
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary-600 focus:outline-none disabled:bg-gray-100"
-                    placeholder="+265 999 123 456"
-                  />
+                    placeholder="+265 999 123 456" />
                 </div>
 
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Subject</label>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    disabled={loading}
+                  <input type="text" name="subject" value={formData.subject} onChange={handleChange} disabled={loading}
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary-600 focus:outline-none disabled:bg-gray-100"
-                    placeholder="What is this about?"
-                  />
+                    placeholder="What is this about?" />
                 </div>
 
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Message *</label>
-                  <textarea
-                    name="message"
-                    required
-                    value={formData.message}
-                    onChange={handleChange}
-                    disabled={loading}
-                    rows="5"
+                  <textarea name="message" required value={formData.message} onChange={handleChange} disabled={loading} rows="5"
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary-600 focus:outline-none disabled:bg-gray-100"
-                    placeholder="Your message here..."
-                  ></textarea>
+                    placeholder="Your message here..."></textarea>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                <button type="submit" disabled={loading}
+                  className="w-full btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed">
                   {loading ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             </div>
 
+            {/* === MAP – PERFECTLY FITTED, USING YOUR IFRAME === */}
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Find Us</h2>
-              <div className="bg-gray-200 rounded-xl h-96 flex items-center justify-center">
-                <div className="text-center text-gray-600">
-                  <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <p className="font-semibold text-lg">Maselema, Behind AGMA House</p>
-                  <p>Blantyre, Malawi</p>
-                </div>
+
+              {/* This div has exactly the same size & style as your old placeholder */}
+              <div className="bg-gray-200 rounded-xl h-96 w-full overflow-hidden shadow-xl">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1919.4763909946635!2d35.045820327613285!3d-15.80644357321108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTXCsDQ4JzIzLjIiUyAzNcKwMDInNDguMiJF!5e0!3m2!1sen!2smw!4v1765279158494!5m2!1sen!2smw"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Everest Paper Products - Maselema, Blantyre"
+                  className="w-full h-full"
+                ></iframe>
               </div>
 
+              {/* Text below the map – same as before */}
               <div className="mt-8 bg-primary-50 border-2 border-primary-200 rounded-lg p-6">
                 <h3 className="font-bold text-lg text-gray-900 mb-4">Need Urgent Assistance?</h3>
                 <p className="text-gray-700 mb-4">

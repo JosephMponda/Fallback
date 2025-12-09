@@ -1,27 +1,37 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+// Import the logo (adjust path if your logo is in a different folder)
+import EverestLogo from '../assets/Everest-logo.svg' // ← change only if needed
+
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Company Info + Logo */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">EP</span>
-              </div>
+            <div className="flex items-center space-x-4 mb-6">
+              {/* Real Logo */}
+              <img
+                src={EverestLogo}
+                alt="Everest Printing Press Logo"
+                className="h-12 w-auto" // perfect crisp scaling on all screens
+              />
+
               <div>
                 <h3 className="font-bold text-xl">Everest Printing Press</h3>
                 <p className="text-gray-400 text-sm">Let the good times roll</p>
               </div>
             </div>
-            <p className="text-gray-400 mb-4">
+
+            <p className="text-gray-400 max-w-md">
               Your trusted partner for professional printing services in Malawi. 
               From offset printing to video production, we bring your vision to life.
             </p>
           </div>
 
+          {/* Quick Links */}
           <div>
             <h4 className="font-bold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2">
@@ -33,6 +43,7 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Contact Info */}
           <div>
             <h4 className="font-bold text-lg mb-4">Contact Us</h4>
             <ul className="space-y-3 text-gray-400 text-sm">
@@ -41,7 +52,7 @@ const Footer = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>Maselema, Behind AGMA House<br/>Blantyre, Malawi</span>
+                <span>Maselema, Behind AGMA House<br />Blantyre, Malawi</span>
               </li>
               <li className="flex items-center space-x-2">
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,8 +70,9 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Copyright */}
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 Everest Printing Press. All rights reserved.</p>
+          <p>&copy; 2025 Everest Printing Press. All rights reserved.</p>
         </div>
       </div>
     </footer>
