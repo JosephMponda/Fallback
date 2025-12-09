@@ -3,22 +3,23 @@ import { Link } from 'react-router-dom'
 
 const About = () => {
   const team = [
-    { name: 'Management Team', role: 'Leadership & Strategy', icon: '👔' },
-    { name: 'Design Team', role: 'Creative Professionals', icon: '🎨' },
-    { name: 'Production Team', role: 'Print Specialists', icon: '⚙️' },
-    { name: 'Video Team', role: 'Media Production', icon: '🎥' }
+    { name: 'Management Team', role: 'Leadership & Strategy', icon: 'Management' },
+    { name: 'Design Team', role: 'Creative Professionals', icon: 'Design' },
+    { name: 'Production Team', role: 'Print Specialists', icon: 'Production' },
+    { name: 'Video Team', role: 'Media Production', icon: 'Camera' }
   ]
 
   const timeline = [
-    { year: '2014', event: 'Everest Printing Press Founded', description: 'Started with basic offset printing services' },
-    { year: '2016', event: 'Expanded Services', description: 'Added screen printing and design services' },
-    { year: '2018', event: 'New Equipment', description: 'Invested in state-of-the-art printing technology' },
-    { year: '2020', event: 'Video Production', description: 'Launched professional video production services' },
-    { year: '2024', event: 'Digital Transformation', description: 'Online ordering and expanded digital services' }
+    { year: '2014', event: 'Everest Printing Press Founded', description: 'Started with basic offset printing' },
+    { year: '2016', event: 'Expanded Services', description: 'Added screen printing and design' },
+    { year: '2018', event: 'New Equipment', description: 'Invested in state-of-the-art technology' },
+    { year: '2020', event: 'Video Production Launched', description: 'Professional video services added' },
+    { year: '2024', event: 'Digital Transformation', description: 'Online ordering & digital services' }
   ]
 
   return (
     <div className="pt-20">
+      {/* Hero */}
       <section className="section-padding bg-gradient-to-br from-primary-900 to-primary-700 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">About Us</h1>
@@ -26,9 +27,11 @@ const About = () => {
         </div>
       </section>
 
+      {/* Our Story + Mission Card */}
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Our Story */}
             <div>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
               <p className="text-gray-700 mb-4 text-lg">
@@ -49,26 +52,42 @@ const About = () => {
                 from day one.
               </p>
             </div>
-            <div className="bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl p-12 text-center">
-              <div className="text-6xl mb-4">🏔️</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Our Mission</h3>
-              <p className="text-gray-700 text-lg">
-                To deliver exceptional printing and media production services that exceed 
-                expectations, while building lasting relationships with our clients through 
-                quality, reliability, and innovation.
-              </p>
+
+            {/* MISSION CARD — Grayish-black overlay for maximum contrast */}
+            <div className="relative rounded-xl overflow-hidden h-96 lg:h-[400px] shadow-xl">
+              {/* Full background SVG */}
+              <img
+                src="/src/assets/Our-mission.svg"
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+
+              {/* Very soft black overlay + soft blur */}
+              <div className="absolute inset-0 bg-black/15 backdrop-blur-[1px]"></div>
+
+              {/* White text — crisp text */}
+              <div className="relative h-full flex flex-col justify-center items-center px-10 text-center text-white">
+                <h3 className="text-3xl md:text-4xl font-bold mb-6 drop-shadow-2xl">
+                  Our Mission
+                </h3>
+                <p className="text-lg md:text-xl leading-relaxed max-w-lg drop-shadow-lg">
+                  To deliver exceptional printing and media production services that exceed 
+                  expectations, while building lasting relationships with our clients through 
+                  quality, reliability, and innovation.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Timeline, Team, CTA — unchanged */}
       <section className="section-padding bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Journey</h2>
             <p className="text-xl text-gray-600">A decade of growth and innovation</p>
           </div>
-
           <div className="space-y-8">
             {timeline.map((item, index) => (
               <div key={index} className="flex gap-8 items-start">
@@ -92,7 +111,6 @@ const About = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Team</h2>
             <p className="text-xl text-gray-600">Dedicated professionals committed to your success</p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {team.map((member, index) => (
               <div key={index} className="text-center p-6 rounded-xl bg-gray-50 hover:shadow-lg transition-all">
