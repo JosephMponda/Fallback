@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 // Import the logo (adjust path if your logo is in a different folder)
-import EverestLogo from '../assets/Everest-logo.svg' // ← change only if needed
+import EverestLogo from '../assets/Everest-Logo.svg' // ← change only if needed
 
 const Footer = () => {
   return (
