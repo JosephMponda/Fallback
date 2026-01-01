@@ -1,130 +1,94 @@
-import express from 'express';
-import path from 'path';
-import cors from 'cors';
-import helmet from 'helmet';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import logger from './config/logger.js';
-import { errorHandler, notFound } from './middleware/errorHandler.js';
-import { apiLimiter } from './middleware/rateLimiter.js';
+import express from 'express'
+import path from 'path'
+import cors from 'cors'
+import helmet from 'helmet'
+import dotenv from 'dotenv'
+import { fileURLToPath } from 'url'
+import logger from './config/logger.js'
+import { errorHandler, notFound } from './middleware/errorHandler.js'
+import { apiLimiter } from './middleware/rateLimiter.js'
 
-// Import routes
-import authRoutes from './routes/authRoutes.js';
-import serviceRoutes from './routes/serviceRoutes.js';
-import galleryRoutes from './routes/galleryRoutes.js';
-import orderRoutes from './routes/orderRoutes.js';
-import quoteRoutes from './routes/quoteRoutes.js';
-import contactRoutes from './routes/contactRoutes.js';
+import authRoutes from './routes/authRoutes.js'
+import serviceRoutes from './routes/serviceRoutes.js'
+import galleryRoutes from './routes/galleryRoutes.js'
+import orderRoutes from './routes/orderRoutes.js'
+import quoteRoutes from './routes/quoteRoutes.js'
+import contactRoutes from './routes/contactRoutes.js'
 
-// Load environment variables
-dotenv.config();
+dotenv.config()
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+const app = express()
+const PORT = process.env.PORT || 5000
 
-// Resolve __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-// Security middleware
-// Build imgSrc directives dynamically so we can allow localhost/http in development
-const imgSrcDirectives = ["'self'", 'data:', 'https:']
-if (process.env.NODE_ENV === 'development') {
-  // allow http resources during local development (localhost backends)
-  imgSrcDirectives.push('http:')
-}
-if (process.env.FRONTEND_URL) imgSrcDirectives.push(process.env.FRONTEND_URL)
-if (process.env.BACKEND_URL) imgSrcDirectives.push(process.env.BACKEND_URL)
+/* Security headers only. No CSP */
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false
+  })
+)
 
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: imgSrcDirectives,
-    },
-  },
-  crossOriginEmbedderPolicy: false,
-  // Control Cross-Origin-Resource-Policy (CORP). In development allow cross-origin
-  // so localhost image requests aren't blocked by the browser. Keep stricter policy in production.
-  crossOriginResourcePolicy: {
-    policy: process.env.NODE_ENV === 'development' ? 'cross-origin' : 'same-origin'
-  },
-}));
+/* Static resources */
+app.use('/resources', express.static(path.join(__dirname, 'Resources')))
 
-// Serve resource images (e.g. backend/Resources) as static assets
-app.use('/resources', express.static(path.join(__dirname, 'Resources')));
+/* CORS. Allow frontend to talk to backend */
+app.use(
+  cors({
+    origin: true,
+    credentials: true
+  })
+)
 
-// CORS configuration
-const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:3000'].filter(Boolean);
-const corsOptions = {
-  origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps, curl, or same-origin)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('CORS policy: This origin is not allowed'));
-  },
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
+/* Preflight */
+app.options('*', cors())
 
-// Body parser middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+/* Body parsers */
+app.use(express.json({ limit: '10mb' }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
-// Apply rate limiting to all API routes
-app.use('/api', apiLimiter);
+/* Rate limiting */
+app.use('/api', apiLimiter)
 
-// Health check endpoint
+/* Health check */
 app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Server is running',
-    timestamp: new Date().toISOString(),
-  });
-});
+    timestamp: new Date().toISOString()
+  })
+})
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/services', serviceRoutes);
-app.use('/api/gallery', galleryRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/quotes', quoteRoutes);
-app.use('/api/contact', contactRoutes);
+/* API routes */
+app.use('/api/auth', authRoutes)
+app.use('/api/services', serviceRoutes)
+app.use('/api/gallery', galleryRoutes)
+app.use('/api/orders', orderRoutes)
+app.use('/api/quotes', quoteRoutes)
+app.use('/api/contact', contactRoutes)
 
-// Root endpoint
+/* Root */
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Secure Backend API',
-    version: '1.0.0',
-    endpoints: {
-      auth: '/api/auth',
-      services: '/api/services',
-      gallery: '/api/gallery',
-      orders: '/api/orders',
-      quotes: '/api/quotes',
-      contact: '/api/contact',
-    },
-  });
-});
+    version: '1.0.0'
+  })
+})
 
-// Error handling
-app.use(notFound);
-app.use(errorHandler);
+/* Errors */
+app.use(notFound)
+app.use(errorHandler)
 
-// Start server
+/* Start */
 app.listen(PORT, () => {
-  logger.info(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-  logger.info(`📧 Admin email configured: ${process.env.ADMIN_EMAIL}`);
-});
+  logger.info(`Server running on port ${PORT}`)
+})
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  logger.error('Unhandled Promise Rejection:', err);
-  process.exit(1);
-});
+process.on('unhandledRejection', err => {
+  logger.error('Unhandled Promise Rejection', err)
+  process.exit(1)
+})
 
-export default app;
+export default app
