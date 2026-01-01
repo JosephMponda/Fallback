@@ -49,3 +49,6 @@ prisma/migrations/*
 # Misc
 *.pem
 .cache
+
+# Vercel
+.vercel
