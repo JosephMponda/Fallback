@@ -9,7 +9,8 @@
     "dev": "nodemon server.js",
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "build": "prisma generate"
   },
   "keywords": [
     "express",
@@ -20,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^6.19.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -30,6 +32,7 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.10",
+    "pg": "^8.17.2",
     "stripe": "^14.9.0",
     "winston": "^3.11.0"
   },
