@@ -68,7 +68,7 @@ const Contact = () => {
         </svg>
       ),
       title: 'Email Us',
-      details: ['everestpaperproducts@yahoo.com', 'info@everestprinting.mw']
+      details: ['everestpaperproducts@yahoo.com', 'everestprinting@gmail.com']
     },
     {
       icon: (
@@ -83,8 +83,9 @@ const Contact = () => {
 
   return (
     <div className="pt-20">
-      <section className="section-padding bg-gradient-to-br from-primary-900 to-primary-700 text-white">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="section-padding contact-hero-bg text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/55"></div>
+        <div className="relative max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">Contact Us</h1>
           <p className="text-xl">Get in touch with us for any inquiries or project discussions</p>
         </div>
@@ -175,7 +176,7 @@ const Contact = () => {
               {/* This div has exactly the same size & style as your old placeholder */}
               <div className="bg-gray-200 rounded-xl h-96 w-full overflow-hidden shadow-xl">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1919.4763909946635!2d35.045820327613285!3d-15.80644357321108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTXCsDQ4JzIzLjIiUyAzNcKwMDInNDguMiJF!5e0!3m2!1sen!2smw!4v1765279158494!5m2!1sen!2smw"
+                  src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d678.6349723840856!2d35.045874446714585!3d-15.807163436940886!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2smw!4v1778491977154!5m2!1sen!2smw"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

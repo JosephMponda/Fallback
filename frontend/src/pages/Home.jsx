@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Home = () => {
+  const [iconError, setIconError] = useState({})
   const services = [
     {
       title: 'Offset Printing',
@@ -37,19 +38,36 @@ const Home = () => {
   ]
 
   const whyChooseUs = [
-    { title: 'Quality Guarantee', description: 'State-of-the-art equipment and premium materials', icon: '✓' },
-    { title: 'Fast Turnaround', description: 'Express services without compromising quality', icon: '⚡' },
-    { title: 'Competitive Pricing', description: 'Professional results at budget-friendly prices', icon: '💰' },
-    { title: 'Expert Team', description: 'Experienced professionals guide every project', icon: '👥' }
+    {
+      title: 'Quality Guarantee',
+      description: 'State-of-the-art equipment and premium materials',
+      icon: '✓',
+      iconUrl: 'https://images.unsplash.com/photo-1638262052640-82e94d64664a?auto=format&fit=crop&w=200&q=80'
+    },
+    {
+      title: 'Fast Turnaround',
+      description: 'Express services without compromising quality',
+      icon: '⚡',
+      iconUrl: 'https://images.unsplash.com/photo-1503694978374-8a2fa686963a?auto=format&fit=crop&w=200&q=80'
+    },
+    {
+      title: 'Competitive Pricing',
+      description: 'Professional results at budget-friendly prices',
+      icon: '💰',
+      iconUrl: 'https://plus.unsplash.com/premium_photo-1718737640908-b6107649c9f0?auto=format&fit=crop&w=200&q=80'
+    },
+    {
+      title: 'Expert Team',
+      description: 'Experienced professionals guide every project',
+      icon: '👥',
+      iconUrl: 'https://plus.unsplash.com/premium_photo-1663047573369-e65d9b9e8387?auto=format&fit=crop&w=200&q=80'
+    }
   ]
 
   return (
     <div className="overflow-hidden">
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-900 via-primary-700 to-primary-600">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`}}></div>
-        </div>
+      <section className="relative min-h-screen flex items-center justify-center hero-bg bg-cover bg-center">
+        <div className="absolute inset-0 bg-black/50"></div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-20 text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in">
@@ -66,13 +84,14 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
+      <section className="relative py-16 stats-bg bg-cover bg-center">
+        <div className="absolute inset-0 bg-black/55"></div>
+        <div className="relative max-w-7xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-primary-600 mb-2">{stat.number}</div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
+              <div key={index} className="text-center text-white">
+                <div className="text-4xl md:text-5xl font-bold mb-2">{stat.number}</div>
+                <div className="text-white/80 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -133,19 +152,34 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {whyChooseUs.map((item, index) => (
-              <div key={index} className="text-center p-6 rounded-xl hover:bg-gray-50 transition-colors">
-                <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">{item.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
-            ))}
+            {whyChooseUs.map((item, index) => {
+              const showFallback = item.iconUrl && iconError[index]
+              return (
+                <div key={index} className="text-center p-6 rounded-xl hover:bg-gray-50 transition-colors">
+                  <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden relative">
+                    {item.iconUrl && !iconError[index] ? (
+                      <img
+                        src={item.iconUrl}
+                        alt={`${item.title} icon`}
+                        className="w-full h-full object-cover"
+                        onError={() => setIconError(prev => ({ ...prev, [index]: true }))}
+                      />
+                    ) : (
+                      <span className="text-3xl">{item.icon}</span>
+                    )}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-gray-600">{item.description}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
 
-      <section className="section-padding bg-gradient-to-br from-primary-600 to-primary-800 text-white">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative section-padding cta-bg bg-cover bg-center text-white">
+        <div className="absolute inset-0 bg-black/65"></div>
+        <div className="relative max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Start Your Project?</h2>
           <p className="text-xl mb-8">Get in touch with us today for a free consultation and quote</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
