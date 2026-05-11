@@ -27,7 +27,7 @@ const Gallery = () => {
     { category: 'video', title: 'Corporate Video', description: '3-minute company profile', imageUrl: 'https://images.unsplash.com/photo-1654723011680-0e037c2a4f18?w=800' },
     { category: 'video', title: 'Product Commercial', description: '30-second TV ad', imageUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800' },
     { category: 'offset', title: 'Annual Reports', description: '100 page full-color report', imageUrl: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800' },
-    { category: 'screen', title: 'Team Uniforms', description: 'Custom sports jerseys', imageUrl: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=800' },
+    { category: 'screen', title: 'Team Uniforms', description: 'Custom sports jerseys', imageUrl: 'https://images.unsplash.com/photo-1716951884527-11889521bea0?' },
     { category: 'banner', title: 'Billboard Design', description: 'Large format outdoor', imageUrl: 'https://images.unsplash.com/photo-1580670029149-5c00eec8bb66?w=800' },
     { category: 'video', title: 'Event Coverage', description: 'Wedding videography', imageUrl: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800' }
   ]
@@ -83,8 +83,9 @@ const Gallery = () => {
 
   return (
     <div className="pt-20">
-      <section className="section-padding bg-gradient-to-br from-primary-900 to-primary-700 text-white">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="section-padding gallery-hero-bg text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/55"></div>
+        <div className="relative max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">Our Gallery</h1>
           <p className="text-xl">Explore our portfolio of successful projects and satisfied clients</p>
         </div>

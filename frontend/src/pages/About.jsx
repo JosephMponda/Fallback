@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const About = () => {
+  const [iconError, setIconError] = useState({})
   // ORIGINAL EMOJIS — BACK AND PERFECT
   const team = [
-    { name: 'Management Team',   role: 'Leadership & Strategy',   icon: '👔' },
-    { name: 'Design Team',       role: 'Creative Professionals', icon: '🎨' },
-    { name: 'Production Team',   role: 'Print Specialists',       icon: '⚙️' },
-    { name: 'Video Team',        role: 'Media Production',        icon: '🎥' }
+    { name: 'Management Team',   role: 'Leadership & Strategy',   icon: '👔', iconUrl: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=200&q=80' },
+    { name: 'Design Team',       role: 'Creative Professionals', icon: '🎨', iconUrl: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?auto=format&fit=crop&w=200&q=80' },
+    { name: 'Production Team',   role: 'Print Specialists',       icon: '⚙️', iconUrl: 'https://images.unsplash.com/photo-1570175246718-ec2090f75140?auto=format&fit=crop&w=200&q=80' },
+    { name: 'Video Team',        role: 'Media Production',        icon: '🎥', iconUrl: 'https://images.unsplash.com/photo-1682617367181-13bca56fd981?auto=format&fit=crop&w=200&q=80' }
   ]
 
   const timeline = [
@@ -109,15 +110,27 @@ const About = () => {
             <p className="text-xl text-gray-600">Dedicated professionals committed to your success</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="text-center p-6 rounded-xl bg-gray-50 hover:shadow-lg transition-all">
-                <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 text-5xl">
-                  {member.icon}
+            {team.map((member, index) => {
+              const showFallback = member.iconUrl && iconError[index]
+              return (
+                <div key={index} className="text-center p-6 rounded-xl bg-gray-50 hover:shadow-lg transition-all">
+                  <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden relative">
+                    {member.iconUrl && !iconError[index] ? (
+                      <img
+                        src={member.iconUrl}
+                        alt={`${member.name} icon`}
+                        className="w-full h-full object-cover"
+                        onError={() => setIconError(prev => ({ ...prev, [index]: true }))}
+                      />
+                    ) : (
+                      <span className="text-5xl">{member.icon}</span>
+                    )}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
+                  <p className="text-gray-600">{member.role}</p>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                <p className="text-gray-600">{member.role}</p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>

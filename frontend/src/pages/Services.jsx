@@ -112,9 +112,10 @@ const Services = () => {
   }
 
   return (
-    <div className="pt-20">
-      <section className="section-padding bg-gray-50">
-        <div className="max-w-4xl mx-auto text-center">
+    <div className="pt-20 services-page-bg bg-cover bg-center">
+      <section className="section-padding relative">
+        <div className="absolute inset-0 bg-black/55"></div>
+        <div className="relative max-w-4xl mx-auto text-center text-white">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">Our Services</h1>
           <p className="text-xl">Complete printing and media production solutions for businesses across Malawi</p>
         </div>
