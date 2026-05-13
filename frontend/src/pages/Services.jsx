@@ -112,7 +112,7 @@ const Services = () => {
   }
 
   return (
-    <div className="pt-20 services-page-bg bg-cover bg-center">
+    <div className="pt-20 bg-cover bg-center" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1697398798278-3054ef1fab70?w=1200&h=400&fit=crop)', backgroundAttachment: 'fixed'}}>
       <section className="section-padding relative">
         <div className="absolute inset-0 bg-black/55"></div>
         <div className="relative max-w-4xl mx-auto text-center text-white">

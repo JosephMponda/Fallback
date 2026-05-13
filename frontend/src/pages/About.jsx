@@ -22,8 +22,9 @@ const About = () => {
   return (
     <div className="pt-20">
       {/* Hero */}
-      <section className="section-padding bg-gradient-to-br from-primary-900 to-primary-700 text-white">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="section-padding text-white bg-cover bg-center relative" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1689796606058-91e5dc40764d?w=1200&h=400&fit=crop)', backgroundAttachment: 'fixed'}}>
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">About Us</h1>
           <p className="text-xl">Over a decade of excellence in printing and media production</p>
         </div>
@@ -136,8 +137,9 @@ const About = () => {
       </section>
 
       {/* CTA */}
-      <section className="section-padding bg-gradient-to-br from-primary-600 to-primary-800 text-white">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="section-padding text-white bg-cover bg-center relative" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1507041957456-9c397ce39c97?w=1200&h=400&fit=crop)', backgroundAttachment: 'fixed'}}>
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Work With Us?</h2>
           <p className="text-xl mb-8">Let's bring your printing and media projects to life</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

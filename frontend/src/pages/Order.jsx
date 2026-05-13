@@ -287,8 +287,9 @@ const Order = () => {
 
   return (
     <div className="pt-24">
-      <section className="section-padding bg-gradient-to-br from-primary-900 to-primary-700 text-white">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="section-padding text-white bg-cover bg-center relative" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1717964134799-a98f497172a5?w=1200&h=400&fit=crop)', backgroundAttachment: 'fixed'}}>
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">Request a Quote</h1>
           <p className="text-xl">Fill out the form below and we'll get back to you with a quote within 24 hours</p>
         </div>
