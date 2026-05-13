@@ -58,7 +58,7 @@ const About = () => {
             {/* MISSION CARD — Your perfect version with bg-black/15 */}
             <div className="relative rounded-xl overflow-hidden h-96 lg:h-[400px] shadow-xl">
               <img
-                src="/src/assets/Our-mission.svg"
+                src="/assets/Our-mission.svg"
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
               />
