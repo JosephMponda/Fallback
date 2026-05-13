@@ -24,7 +24,8 @@ export const getAllGalleryItems = async (req, res) => {
     logger.error('Get gallery items error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching gallery items',
+      message: error.message,
+      stack: error.stack
     });
   }
 };

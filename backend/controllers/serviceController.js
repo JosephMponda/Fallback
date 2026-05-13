@@ -20,13 +20,16 @@ export const getAllServices = async (req, res) => {
       data: { services },
     });
   } catch (error) {
-    logger.error('Get services error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching services',
+      logger.error('Get services error:', error);
+
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+        stack: error.stack
     });
+}
   }
-};
+
 
 export const getServiceById = async (req, res) => {
   try {
