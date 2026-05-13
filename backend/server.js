@@ -77,6 +77,12 @@ app.get('/', (req, res) => {
   })
 })
 
+/* temporary test route to verify DB connection */
+app.get('/test-db', async (req, res) => {
+  const result = await prisma.service.findMany();
+  res.json(result);
+});
+
 /* Errors */
 app.use(notFound)
 app.use(errorHandler)
