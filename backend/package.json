@@ -10,7 +10,8 @@
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
     "studio": "prisma studio",
-    "build": "prisma generate"
+    "build": "prisma generate",
+    "check": "npm audit"
   },
   "keywords": [
     "express",
@@ -33,6 +34,7 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.10",
     "pg": "^8.17.2",
+    "qs": "^6.14.2",
     "stripe": "^14.9.0",
     "winston": "^3.11.0"
   },
