@@ -13,42 +13,42 @@ const Services = () => {
       icon: '🖨️',
       description: 'Professional offset printing services for all your commercial printing needs.',
       items: ['Business Cards', 'Brochures & Flyers', 'Magazines & Catalogs', 'Books & Manuals', 'Letterheads', 'Envelopes', 'Posters', 'Annual Reports'],
-      img: '/assets/Speedmaster.png'
+      img: '/assets/Speedmaster.webp'
     },
     {
       title: 'Screen Printing',
       icon: '🎨',
       description: 'High-quality screen printing for apparel, promotional items, and custom merchandise.',
       items: ['T-Shirts & Apparel', 'Promotional Items', 'Tote Bags', 'Caps & Hats', 'Banners', 'Stickers', 'Custom Merchandise', 'Event Materials'],
-      img: '/assets/Screen-Printing.png'
+      img: '/assets/Screen-Printing.webp'
     },
     {
       title: 'Large Format Printing',
       icon: '🏳️',
       description: 'Eye-catching large format printing for advertising, events, and displays.',
       items: ['Banners', 'Billboards', 'Vehicle Wraps', 'Window Graphics', 'Floor Graphics', 'Trade Show Displays', 'Point of Sale', 'Backdrops'],
-      img: '/assets/Large-Format-Print.png'
+      img: '/assets/Large-Format-Print.webp'
     },
     {
       title: 'Video Production',
       icon: '🎥',
       description: 'Complete video production services from concept to final edit.',
       items: ['Corporate Videos', 'Commercials', 'Event Coverage', 'Product Videos', 'Training Videos', 'Documentaries', 'Social Media Content', 'Video Editing'],
-      img: '/assets/Video-Production.png'
+      img: '/assets/Video-Production.webp'
     },
     {
       title: 'Design Services',
       icon: '✏️',
       description: 'Professional graphic design services to bring your ideas to life.',
       items: ['Logo Design', 'Brand Identity', 'Marketing Materials', 'Packaging Design', 'Social Media Graphics', 'Illustrations', 'Layout Design', 'Photo Editing'],
-      img: '/assets/Design-Services.png'
+      img: '/assets/Design-Services.webp'
     },
     {
       title: 'Digital Printing',
       icon: '💻',
       description: 'Quick turnaround digital printing for small to medium print runs.',
       items: ['Business Cards', 'Flyers', 'Postcards', 'Invitations', 'Variable Data Printing', 'Photo Prints', 'Short Run Books', 'Same-Day Printing'],
-      img: '/assets/Digital-Services.png'
+      img: '/assets/Digital-Services.webp'
     }
   ]
 
@@ -99,13 +99,13 @@ const Services = () => {
   // Map service titles/keywords to public/assets images
   const getServiceImage = (title) => {
     const map = {
-      'offset': '/assets/Speedmaster.png',
-      'screen': '/assets/Screen-Printing.png',
-      'large format': '/assets/Large-Format-Print.png',
-      'banner': '/assets/Large-Format-Print.png',
-      'video': '/assets/Video-Production.png',
-      'design': '/assets/Design-Services.png',
-      'digital': '/assets/Digital-Services.png'
+      'offset': '/assets/Speedmaster.webp',
+      'screen': '/assets/Screen-Printing.webp',
+      'large format': '/assets/Large-Format-Print.webp',
+      'banner': '/assets/Large-Format-Print.webp',
+      'video': '/assets/Video-Production.webp',
+      'design': '/assets/Design-Services.webp',
+      'digital': '/assets/Digital-Services.webp'
     }
     const key = Object.keys(map).find(k => (title || '').toLowerCase().includes(k))
     return key ? map[key] : null
