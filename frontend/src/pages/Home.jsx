@@ -8,25 +8,25 @@ const Home = () => {
       title: 'Offset Printing',
       description: 'High-quality offset printing for books, magazines, brochures, and more. Perfect for large volume orders.',
       features: ['High Volume', 'Cost Effective', 'Superior Quality'],
-      img: '/assets/Speedmaster.png'
+      img: '/assets/Speedmaster.webp'
     },
     {
       title: 'Screen Printing',
       description: 'Vibrant screen printing on t-shirts, banners, and promotional materials. Durable and eye-catching.',
       features: ['Vibrant Colors', 'Durable', 'Custom Designs'],
-      img: '/assets/Screen-Printing.png'
+      img: '/assets/Screen-Printing.webp'
     },
     {
       title: 'Banner Printing',
       description: 'Large format banner printing for events, advertising, and displays. Weather-resistant materials.',
       features: ['Large Format', 'Weather Resistant', 'Quick Turnaround'],
-      img: '/assets/Large-Format-Print.png'
+      img: '/assets/Large-Format-Print.webp'
     },
     {
       title: 'Video Production',
       description: 'Professional video production services for commercials, corporate videos, and event coverage.',
       features: ['HD Quality', 'Professional Editing', 'Fast Delivery'],
-      img: '/assets/Video-Production.png'
+      img: '/assets/Video-Production.webp'
     }
   ]
 
