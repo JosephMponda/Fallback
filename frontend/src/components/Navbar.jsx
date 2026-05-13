@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import EverestLogo2 from '../assets/Everest-Logo-2.ico'
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -43,7 +44,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 overflow-hidden">
               <img
-                src="/src/assets/Everest-Logo-2.ico"
+                src={EverestLogo2}
                 alt="Everest Printing Logo"
                 className="w-full h-full object-contain"
               />
